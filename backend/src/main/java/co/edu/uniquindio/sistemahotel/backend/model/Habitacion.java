@@ -1,5 +1,7 @@
 package co.edu.uniquindio.sistemahotel.backend.model;
 
+import co.edu.uniquindio.sistemahotel.backend.enums.EstadoHabitacion;
+import co.edu.uniquindio.sistemahotel.backend.enums.TipoHabitacion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
