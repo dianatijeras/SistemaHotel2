@@ -1,7 +1,8 @@
 package co.edu.uniquindio.sistemahotel.backend;
 
+import co.edu.uniquindio.sistemahotel.backend.controller.HabitacionController;
 import co.edu.uniquindio.sistemahotel.backend.controller.ReservaController;
-import co.edu.uniquindio.sistemahotel.backend.view.VentanaRegistrarReserva;
+import co.edu.uniquindio.sistemahotel.backend.view.VentanaPrincipal;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -13,28 +14,23 @@ public class BackendApplication {
 
     public static void main(String[] args) {
 
-        // Creamos manualmente la aplicación Spring
-        SpringApplication application =
-                new SpringApplication(BackendApplication.class);
+        SpringApplication application = new SpringApplication(BackendApplication.class);
 
-        // IMPORTANTE:
-        // Permitimos que Spring Boot utilice interfaz gráfica Swing
+        /*
+         * Spring Boot debe permitir
+         * el entorno gráfico de Swing.
+         */
         application.setHeadless(false);
 
-        // Iniciamos Spring
-        ConfigurableApplicationContext context =
-                application.run(args);
+        ConfigurableApplicationContext context = application.run(args);
 
-        // Abrimos la ventana Swing
         SwingUtilities.invokeLater(() -> {
 
-            ReservaController reservaController =
-                    context.getBean(ReservaController.class);
+            ReservaController reservaController = context.getBean(ReservaController.class);
 
-            VentanaRegistrarReserva ventana =
-                    new VentanaRegistrarReserva(
-                            reservaController
-                    );
+            HabitacionController habitacionController = context.getBean(HabitacionController.class);
+
+            VentanaPrincipal ventana = new VentanaPrincipal(reservaController, habitacionController);
 
             ventana.setVisible(true);
         });

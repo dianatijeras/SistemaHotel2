@@ -23,8 +23,12 @@ public class HabitacionService {
     private final HabitacionRepository habitacionRepository;
     private final ReservaRepository reservaRepository;
 
-    private static final Set<EstadoReserva> ESTADOS_QUE_OCUPAN_FECHAS = Set.of(
-            EstadoReserva.RESERVADA, EstadoReserva.CONFIRMADA, EstadoReserva.CHECKED_IN
+    private static final Set<EstadoReserva>
+            ESTADOS_QUE_OCUPAN_FECHAS = Set.of(
+
+                    EstadoReserva.RESERVADA,
+                    EstadoReserva.CONFIRMADA,
+                    EstadoReserva.CHECKED_IN
     );
 
     public HabitacionService(HabitacionRepository habitacionRepository, ReservaRepository reservaRepository) {
@@ -43,7 +47,7 @@ public class HabitacionService {
     }
 
     /**
-     * RF002 (versión simple): habitaciones cuyo estado actual es DISPONIBLE.
+     * RF002: habitaciones cuyo estado actual es DISPONIBLE.
      * Se mantiene para casos donde no interesa un rango de fechas específico
      * (ej: vista general de estado del hotel en el dashboard).
      */
@@ -54,8 +58,7 @@ public class HabitacionService {
     }
 
     /**
-     * RF002 (versión completa, la que realmente responde "¿qué habitaciones
-     * están libres para estas fechas?"): una habitación se considera
+     * RF002: una habitación se considera
      * disponible en un rango de fechas si:
      *  - no está fuera de servicio ni en mantenimiento, y
      *  - no tiene ninguna reserva activa (RESERVADA/CONFIRMADA/CHECKED_IN)
@@ -65,14 +68,15 @@ public class HabitacionService {
      * solo una foto del momento actual; para saber si está libre del 10 al
      * 15 de un mes hay que mirar sus reservas en ese rango, no su estado hoy.
      */
+
     public List<Habitacion> listarDisponiblesEnFechas(LocalDate fechaInicio, LocalDate fechaFin) {
         validarRangoFechas(fechaInicio, fechaFin);
 
-        return habitacionRepository.findAll().stream()
-                .filter(h -> h.getEstadoHabitacion() != EstadoHabitacion.FUERA_DE_SERVICIO
-                        && h.getEstadoHabitacion() != EstadoHabitacion.MANTENIMIENTO)
-                .filter(h -> !tieneSolapamiento(h.getNumeroHabitacion(), fechaInicio, fechaFin, null))
-                .collect(Collectors.toList());
+        List<Habitacion> habitaciones = habitacionRepository.findAll();
+        return habitaciones.stream()
+                .filter(this::estadoPermiteReserva)
+                .filter(habitacion -> !tieneSolapamiento(habitacion.getNumeroHabitacion(), fechaInicio, fechaFin, null))
+                .toList();
     }
 
     /**
@@ -101,5 +105,10 @@ public class HabitacionService {
         if (inicio.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de inicio no puede ser en el pasado.");
         }
+    }
+
+    private boolean estadoPermiteReserva(Habitacion habitacion) {
+        EstadoHabitacion estado = habitacion.getEstadoHabitacion();
+        return estado != EstadoHabitacion.MANTENIMIENTO && estado != EstadoHabitacion.FUERA_DE_SERVICIO;
     }
 }

@@ -22,11 +22,7 @@ public class InMemoryReservaRepository
 
         return reservas.values()
                 .stream()
-                .filter(r ->
-                        r.getHabitacion()
-                                .getNumeroHabitacion()
-                                == numeroHabitacion
-                )
+                .filter(r -> r.getHabitacion().getNumeroHabitacion() == numeroHabitacion)
                 .toList();
     }
 
