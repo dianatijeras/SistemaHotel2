@@ -1,5 +1,6 @@
 package co.edu.uniquindio.sistemahotel.backend.data;
 
+import co.edu.uniquindio.sistemahotel.backend.enums.EstadoHabitacion;
 import co.edu.uniquindio.sistemahotel.backend.enums.TipoHabitacion;
 import co.edu.uniquindio.sistemahotel.backend.model.Habitacion;
 import co.edu.uniquindio.sistemahotel.backend.model.Huesped;
@@ -28,10 +29,12 @@ public class DataInitializer implements CommandLineRunner {
         huespedRepository.save(new Huesped("1004", "Juan", "Perez", "1004004004", "3034567890", "juan.perez@gmail.com"));
         huespedRepository.save(new Huesped("1005", "Laura", "Martinez", "1005005005", "3045678901", "laura.martinez@gmail.com"));
 
-        habitacionRepository.save(new Habitacion(1, TipoHabitacion.ESTANDAR, 30000, 1, "Habitacion con una cama sencilla y baño", 1));
-        habitacionRepository.save(new Habitacion(2, TipoHabitacion.ESTANDAR, 50000, 1, "Habitacion con 2 camas sencillas y baño", 2));
-        habitacionRepository.save(new Habitacion(3, TipoHabitacion.DELUXE, 100000, 2, "Habitacion con 2 camas matrimoniales y baño", 4));
-        habitacionRepository.save(new Habitacion(4, TipoHabitacion.SUITE, 200000, 3, "Habitacion con 2 camas matrimoniales, baño y sala ", 4));
+        habitacionRepository.save(new Habitacion(1, TipoHabitacion.ESTANDAR, 30000, 1, "Habitacion con una cama sencilla y baño", 1, EstadoHabitacion.DISPONIBLE));
+        habitacionRepository.save(new Habitacion(2, TipoHabitacion.ESTANDAR, 50000, 1, "Habitacion con 2 camas sencillas y baño", 2, EstadoHabitacion.DISPONIBLE));
+        habitacionRepository.save(new Habitacion(3, TipoHabitacion.DELUXE, 100000, 2, "Habitacion con 2 camas matrimoniales y baño", 4, EstadoHabitacion.DISPONIBLE));
+        habitacionRepository.save(new Habitacion(4, TipoHabitacion.SUITE, 200000, 3, "Habitacion con 2 camas matrimoniales, baño y sala ", 4, EstadoHabitacion.DISPONIBLE));
+        habitacionRepository.save(new Habitacion(5, TipoHabitacion.SUITE, 200000, 4, "Habitacion con 2 camas matrimoniales, baño y sala ", 4, EstadoHabitacion.EN_LIMPIEZA));
+
 
 
     }

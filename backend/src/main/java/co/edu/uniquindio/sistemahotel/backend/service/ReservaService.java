@@ -141,19 +141,10 @@ public class ReservaService {
     private void validarEstadoHabitacion(
             Habitacion habitacion) {
 
-        EstadoHabitacion estado =
-                habitacion.getEstadoHabitacion();
+        EstadoHabitacion estado = habitacion.getEstadoHabitacion();
 
-        if (estado == EstadoHabitacion.MANTENIMIENTO
-                ||
-                estado == EstadoHabitacion.FUERA_DE_SERVICIO) {
-
-            throw new IllegalStateException(
-                    "La habitación "
-                            + habitacion.getNumeroHabitacion()
-                            + " no puede reservarse porque está "
-                            + estado
-            );
+        if (estado == EstadoHabitacion.MANTENIMIENTO || estado == EstadoHabitacion.FUERA_DE_SERVICIO || estado == EstadoHabitacion.EN_LIMPIEZA) {
+            throw new IllegalStateException("La habitación " + habitacion.getNumeroHabitacion() + " no puede reservarse porque está " + estado);
         }
     }
 
