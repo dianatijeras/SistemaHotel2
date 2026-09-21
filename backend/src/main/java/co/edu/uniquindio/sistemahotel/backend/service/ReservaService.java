@@ -20,11 +20,7 @@ public class ReservaService {
     private final HuespedRepository huespedRepository;
     private final HabitacionService habitacionService;
 
-    public ReservaService(
-            ReservaRepository reservaRepository,
-            HuespedRepository huespedRepository,
-            HabitacionService habitacionService) {
-
+    public ReservaService(ReservaRepository reservaRepository, HuespedRepository huespedRepository, HabitacionService habitacionService) {
         this.reservaRepository = reservaRepository;
         this.huespedRepository = huespedRepository;
         this.habitacionService = habitacionService;
@@ -35,61 +31,23 @@ public class ReservaService {
 
         validarDatosReserva(dto);
 
-        habitacionService.validarRangoFechas(
-                dto.getFechaInicio(),
-                dto.getFechaFin()
-        );
+        habitacionService.validarRangoFechas(dto.getFechaInicio(), dto.getFechaFin());
 
-        Huesped huesped =
-                huespedRepository.findById(dto.getIdHuesped())
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "No existe el huésped con id: "
-                                                + dto.getIdHuesped()
-                                )
-                        );
+        Huesped huesped = huespedRepository.findById(dto.getIdHuesped()).orElseThrow(() -> new IllegalArgumentException("No existe el huésped con id: " + dto.getIdHuesped()));
 
-
-        Habitacion habitacion =
-                habitacionService.obtenerOFallar(
-                        dto.getNumeroHabitacion()
-                );
-
+        Habitacion habitacion = habitacionService.obtenerOFallar(dto.getNumeroHabitacion());
 
         validarEstadoHabitacion(habitacion);
 
+        validarDisponibilidad(habitacion, dto.getFechaInicio(), dto.getFechaFin());
 
-        validarDisponibilidad(
-                habitacion,
-                dto.getFechaInicio(),
-                dto.getFechaFin()
-        );
+        validarCapacidad(habitacion, dto.getAdultos(), dto.getNinos());
 
+        String idReserva = UUID.randomUUID().toString();
 
-        validarCapacidad(
-                habitacion,
-                dto.getAdultos(),
-                dto.getNinos()
-        );
+        String codigoReserva = generarCodigoReserva();
 
-
-        String idReserva =
-                UUID.randomUUID().toString();
-
-        String codigoReserva =
-                generarCodigoReserva();
-
-
-        Reserva reserva = new Reserva(
-                idReserva,
-                codigoReserva,
-                dto.getFechaInicio(),
-                dto.getFechaFin(),
-                dto.getAdultos(),
-                dto.getNinos(),
-                huesped,
-                habitacion
-        );
+        Reserva reserva = new Reserva(idReserva, codigoReserva, dto.getFechaInicio(), dto.getFechaFin(), dto.getAdultos(), dto.getNinos(), huesped, habitacion);
 
 
         return reservaRepository.save(reserva);
@@ -97,49 +55,32 @@ public class ReservaService {
 
 
 
-    private void validarDatosReserva(
-            ReservaRequestDTO dto) {
+    private void validarDatosReserva(ReservaRequestDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException(
-                    "Los datos de la reserva son obligatorios."
-            );
+            throw new IllegalArgumentException("Los datos de la reserva son obligatorios.");
         }
 
-        if (dto.getIdHuesped() == null
-                || dto.getIdHuesped().isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "El huésped es obligatorio."
-            );
+        if (dto.getIdHuesped() == null || dto.getIdHuesped().isBlank()) {
+            throw new IllegalArgumentException("El huésped es obligatorio.");
         }
 
         if (dto.getNumeroHabitacion() == null) {
-
-            throw new IllegalArgumentException(
-                    "La habitación es obligatoria."
-            );
+            throw new IllegalArgumentException("La habitación es obligatoria.");
         }
 
         if (dto.getAdultos() < 1) {
-
-            throw new IllegalArgumentException(
-                    "La reserva debe tener al menos un adulto."
-            );
+            throw new IllegalArgumentException("La reserva debe tener al menos un adulto.");
         }
 
         if (dto.getNinos() < 0) {
-
-            throw new IllegalArgumentException(
-                    "El número de niños no puede ser negativo."
-            );
+            throw new IllegalArgumentException("El número de niños no puede ser negativo.");
         }
     }
 
 
 
-    private void validarEstadoHabitacion(
-            Habitacion habitacion) {
+    private void validarEstadoHabitacion(Habitacion habitacion) {
 
         EstadoHabitacion estado = habitacion.getEstadoHabitacion();
 
@@ -150,68 +91,32 @@ public class ReservaService {
 
 
 
-    private void validarDisponibilidad(
-            Habitacion habitacion,
-            LocalDate fechaInicio,
-            LocalDate fechaFin) {
-
-        boolean existeCruce =
-                habitacionService.tieneSolapamiento(
-                        habitacion.getNumeroHabitacion(),
-                        fechaInicio,
-                        fechaFin,
-                        null
-                );
+    private void validarDisponibilidad(Habitacion habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        boolean existeCruce = habitacionService.tieneSolapamiento(habitacion.getNumeroHabitacion(), fechaInicio, fechaFin, null);
 
         if (existeCruce) {
-
-            throw new IllegalStateException(
-                    "La habitación "
-                            + habitacion.getNumeroHabitacion()
-                            + " ya tiene una reserva "
-                            + "que se cruza con esas fechas."
-            );
+            throw new IllegalStateException("La habitación " + habitacion.getNumeroHabitacion() + " ya tiene una reserva " + "que se cruza con esas fechas.");
         }
     }
 
 
 
-    private void validarCapacidad(
-            Habitacion habitacion,
-            int adultos,
-            int ninos) {
-
+    private void validarCapacidad(Habitacion habitacion, int adultos, int ninos) {
         int totalPersonas = adultos + ninos;
 
-        if (totalPersonas >
-                habitacion.getCapacidad()) {
-
-            throw new IllegalArgumentException(
-                    "La habitación "
-                            + habitacion.getNumeroHabitacion()
-                            + " tiene capacidad para "
-                            + habitacion.getCapacidad()
-                            + " personas. Se solicitaron "
-                            + totalPersonas + "."
-            );
+        if (totalPersonas > habitacion.getCapacidad()) {
+            throw new IllegalArgumentException("La habitación " + habitacion.getNumeroHabitacion() + " tiene capacidad para " + habitacion.getCapacidad() + " personas. Se solicitaron " + totalPersonas + ".");
         }
     }
 
 
 
     private String generarCodigoReserva() {
+        int anio = LocalDate.now().getYear();
 
-        int anio =
-                LocalDate.now().getYear();
+        int consecutivo = reservaRepository.findAll().size() + 1;
 
-        int consecutivo =
-                reservaRepository.findAll().size() + 1;
-
-        return String.format(
-                "RES-%d-%06d",
-                anio,
-                consecutivo
-        );
+        return String.format("RES-%d-%06d", anio, consecutivo);
     }
 
 
@@ -220,16 +125,7 @@ public class ReservaService {
     }
 
 
-    public Reserva obtenerOFallar(
-            String idReserva) {
-
-        return reservaRepository
-                .findById(idReserva)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "No existe la reserva con id: "
-                                        + idReserva
-                        )
-                );
+    public Reserva obtenerOFallar(String idReserva) {
+        return reservaRepository.findById(idReserva).orElseThrow(() -> new IllegalArgumentException("No existe la reserva con id: " + idReserva));
     }
 }

@@ -34,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
         habitacionRepository.save(new Habitacion(3, TipoHabitacion.DELUXE, 100000, 2, "Habitacion con 2 camas matrimoniales y baño", 4, EstadoHabitacion.DISPONIBLE));
         habitacionRepository.save(new Habitacion(4, TipoHabitacion.SUITE, 200000, 3, "Habitacion con 2 camas matrimoniales, baño y sala ", 4, EstadoHabitacion.DISPONIBLE));
         habitacionRepository.save(new Habitacion(5, TipoHabitacion.SUITE, 200000, 4, "Habitacion con 2 camas matrimoniales, baño y sala ", 4, EstadoHabitacion.EN_LIMPIEZA));
+        habitacionRepository.save(new Habitacion(6, TipoHabitacion.DELUXE, 100000, 5, "Habitacion con 2 camas matrimoniales y baño ", 4, EstadoHabitacion.MANTENIMIENTO));
 
 
 

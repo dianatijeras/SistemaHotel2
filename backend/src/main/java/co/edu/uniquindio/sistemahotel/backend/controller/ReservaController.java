@@ -19,9 +19,7 @@ public class ReservaController {
 
 
     public ReservaResponseDTO registrarReserva(ReservaRequestDTO dto) {
-
         Reserva reserva = reservaService.crearReserva(dto);
-
         return ReservaResponseDTO.desde(reserva);
     }
 
@@ -35,8 +33,7 @@ public class ReservaController {
 
     public ReservaResponseDTO buscarReserva(String idReserva) {
 
-        Reserva reserva =
-                reservaService.obtenerOFallar(idReserva);
+        Reserva reserva = reservaService.obtenerOFallar(idReserva);
 
         return ReservaResponseDTO.desde(reserva);
     }

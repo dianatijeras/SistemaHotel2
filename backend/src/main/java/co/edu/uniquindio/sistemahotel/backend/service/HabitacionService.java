@@ -23,9 +23,7 @@ public class HabitacionService {
     private final HabitacionRepository habitacionRepository;
     private final ReservaRepository reservaRepository;
 
-    private static final Set<EstadoReserva>
-            ESTADOS_QUE_OCUPAN_FECHAS = Set.of(
-
+    private static final Set<EstadoReserva> ESTADOS_QUE_OCUPAN_FECHAS = Set.of(
                     EstadoReserva.RESERVADA,
                     EstadoReserva.CONFIRMADA,
                     EstadoReserva.CHECKED_IN
@@ -42,8 +40,7 @@ public class HabitacionService {
 
     public Habitacion obtenerOFallar(int numeroHabitacion) {
         return habitacionRepository.findByNumero(numeroHabitacion)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "No existe la habitación número: " + numeroHabitacion));
+                .orElseThrow(() -> new IllegalArgumentException("No existe la habitación número: " + numeroHabitacion));
     }
 
     /**

@@ -28,8 +28,7 @@ public class Reserva {
     private EstadoReserva estadoReserva;
     private LocalDateTime fechaCreacion;
 
-    public Reserva(String idReserva, String codigoReserva, LocalDate fechaInicio, LocalDate fechaFin,
-                   int adultos, int ninos, Huesped huesped, Habitacion habitacion) {
+    public Reserva(String idReserva, String codigoReserva, LocalDate fechaInicio, LocalDate fechaFin, int adultos, int ninos, Huesped huesped, Habitacion habitacion) {
         this.idReserva = idReserva;
         this.codigoReserva = codigoReserva;
         this.fechaInicio = fechaInicio;

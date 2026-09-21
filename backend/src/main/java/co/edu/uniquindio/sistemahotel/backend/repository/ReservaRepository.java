@@ -9,19 +9,11 @@ public interface ReservaRepository {
 
     List<Reserva> findAll();
 
-    Optional<Reserva> findById(
-            String idReserva
-    );
+    Optional<Reserva> findById(String idReserva);
 
-    List<Reserva> findByNumeroHabitacion(
-            int numeroHabitacion
-    );
+    List<Reserva> findByNumeroHabitacion(int numeroHabitacion);
 
-    List<Reserva> findByIdHuesped(
-            String idHuesped
-    );
+    List<Reserva> findByIdHuesped(String idHuesped);
 
-    Reserva save(
-            Reserva reserva
-    );
+    Reserva save(Reserva reserva);
 }

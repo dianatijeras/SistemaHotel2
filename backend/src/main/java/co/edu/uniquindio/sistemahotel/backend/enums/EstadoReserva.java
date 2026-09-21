@@ -6,5 +6,5 @@ public enum EstadoReserva {
     CHECKED_IN,
     FINALIZADA,
     CANCELADA,
-    NO_SHOW
+    NO_SHOW;
 }

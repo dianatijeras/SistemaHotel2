@@ -12,14 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InMemoryReservaRepository
         implements ReservaRepository {
 
-    private final Map<String, Reserva> reservas =
-            new ConcurrentHashMap<>();
+    private final Map<String, Reserva> reservas = new ConcurrentHashMap<>();
 
 
     @Override
-    public List<Reserva> findByNumeroHabitacion(
-            int numeroHabitacion) {
-
+    public List<Reserva> findByNumeroHabitacion(int numeroHabitacion) {
         return reservas.values()
                 .stream()
                 .filter(r -> r.getHabitacion().getNumeroHabitacion() == numeroHabitacion)
@@ -28,39 +25,28 @@ public class InMemoryReservaRepository
 
 
     @Override
-    public Reserva save(
-            Reserva reserva) {
+    public Reserva save(Reserva reserva) {
 
-        reservas.put(
-                reserva.getIdReserva(),
-                reserva
-        );
-
+        reservas.put(reserva.getIdReserva(), reserva);
         return reserva;
     }
 
 
     @Override
     public List<Reserva> findAll() {
-        return List.copyOf(
-                reservas.values()
-        );
+        return List.copyOf(reservas.values());
     }
 
 
     @Override
-    public Optional<Reserva> findById(
-            String idReserva) {
+    public Optional<Reserva> findById(String idReserva) {
 
-        return Optional.ofNullable(
-                reservas.get(idReserva)
-        );
+        return Optional.ofNullable(reservas.get(idReserva));
     }
 
 
     @Override
-    public List<Reserva> findByIdHuesped(
-            String idHuesped) {
+    public List<Reserva> findByIdHuesped(String idHuesped) {
 
         return reservas.values()
                 .stream()

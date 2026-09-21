@@ -6,5 +6,5 @@ public enum EstadoHabitacion {
     OCUPADA,
     EN_LIMPIEZA,
     MANTENIMIENTO,
-    FUERA_DE_SERVICIO,
+    FUERA_DE_SERVICIO;
 }
