@@ -25,9 +25,7 @@ public class Habitacion {
      * @param capacidad
      * @param categoria
      */
-    public Habitacion(int numeroHabitacion, TipoHabitacion tipoHabitacion,
-                      double precioNoche, int piso, String descripcion,
-                      int capacidad, CategoriaHabitacion categoria) {
+    public Habitacion(int numeroHabitacion, TipoHabitacion tipoHabitacion, double precioNoche, int piso, String descripcion, int capacidad, CategoriaHabitacion categoria) {
         this.numeroHabitacion = numeroHabitacion;
         this.tipoHabitacion = tipoHabitacion;
         this.precioNoche = precioNoche;
