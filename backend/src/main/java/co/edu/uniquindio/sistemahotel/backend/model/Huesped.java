@@ -25,11 +25,11 @@ public class Huesped extends Usuario{
     /**
      * Actualiza los datos personales del huésped. El identificador interno nunca se modifica:
      * es responsabilidad exclusiva del sistema.
-     * @param nombre nombre de pila
-     * @param apellido apellido
-     * @param documento documento de identificación
-     * @param telefono teléfono de contacto
-     * @param correo correo de contacto
+     * @param nombre
+     * @param apellido
+     * @param documento
+     * @param telefono
+     * @param correo
      */
     public void actualizarDatos(String nombre, String apellido, String documento, String telefono, String correo) {
         this.nombre = nombre;
