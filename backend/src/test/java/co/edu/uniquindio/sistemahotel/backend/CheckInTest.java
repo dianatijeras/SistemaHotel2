@@ -48,14 +48,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 class CheckInTest {
 
-    /** Fechas calculadas en cada momento para que las pruebas no dependan de una fecha fija. */
     private static final LocalDate HOY = LocalDate.now();
     private static final LocalDate MAÑANA = LocalDate.now().plusDays(1);
     private static final LocalDate PASADO = LocalDate.now().minusDays(10);
 
     private static final String ID_HUESPED = "H-001";
     private static final int HABITACION = 101;
-    /** Prefijo de los huéspedes creados solo para una prueba concreta. */
     private static final String ID_HUESPED_PRUEBA = "H-PRUEBA";
 
     @Autowired
@@ -82,15 +80,9 @@ class CheckInTest {
         dataStore.getEstadias().clear();
         dataStore.getPagos().clear();
         dataStore.getHabitaciones().forEach(h -> h.cambiarEstado(EstadoHabitacion.DISPONIBLE));
-        // Los huéspedes de prueba se eliminan para no dejar residuos entre pruebas. Los huéspedes
-        // semilla NUNCA se modifican: son objetos compartidos y alterarlos contaminaría el resto
-        // de pruebas de esta clase y de las demás que comparten el contexto de Spring.
         dataStore.getHuespedes().removeIf(h -> h.getIdHuesped().startsWith(ID_HUESPED_PRUEBA));
     }
 
-    // ------------------------------------------------------------------
-    // 1. Check-in exitoso y estados resultantes
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Realiza el check-in y devuelve la estadia creada")
@@ -136,10 +128,6 @@ class CheckInTest {
         assertThat(activas).isEqualTo(1);
     }
 
-    // ------------------------------------------------------------------
-    // 2. Identidad del huesped
-    // ------------------------------------------------------------------
-
     @Test
     @DisplayName("El check-in expone el documento real del huesped y no su id interno")
     void checkIn_verificaElDocumentoDelHuesped() {
@@ -158,8 +146,6 @@ class CheckInTest {
     @Test
     @DisplayName("Rechaza el check-in si el huesped no tiene documento de identidad")
     void checkIn_sinDocumento_esRechazado() {
-        // Se usa un huesped propio de esta prueba en lugar de alterar el semilla, que es un
-        // objeto compartido por todas las reservas del DataStore.
         Huesped huesped = registrarHuespedDePrueba(ID_HUESPED_PRUEBA + "-SIN-DOC", "   ");
         Reserva reserva = crearReservaConHuesped(huesped, HABITACION, HOY, MAÑANA);
 
@@ -197,9 +183,6 @@ class CheckInTest {
         assertThat(reserva.getHuesped().getIdHuesped()).isEqualTo(huespedAntes);
     }
 
-    // ------------------------------------------------------------------
-    // 3. Estados de reserva no permitidos
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Rechaza el check-in en reservas CANCELADA, NO_SHOW, CHECKED_IN y FINALIZADA")
@@ -251,9 +234,6 @@ class CheckInTest {
                 .hasMessageContaining("Debe indicar la reserva");
     }
 
-    // ------------------------------------------------------------------
-    // 4. Check-in duplicado
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Rechaza un segundo check-in de la misma reserva")
@@ -273,9 +253,6 @@ class CheckInTest {
         Reserva primera = crearReserva(HABITACION, HOY, MAÑANA);
         estadiaService.realizarCheckIn(primera.getIdReserva());
 
-        // Segunda reserva en la MISMA habitacion y en las MISMAS fechas: no puede crearse por la
-        // API (el solapamiento lo impide), asi que se inserta directamente para simular el estado
-        // incoherente que la validacion defensiva debe detectar.
         Reserva segunda = insertarReservaDirecta("RES-COINCIDENTE", HABITACION, HOY, MAÑANA);
         habitacionService.obtenerOFallar(HABITACION).cambiarEstado(EstadoHabitacion.DISPONIBLE);
 
@@ -287,9 +264,6 @@ class CheckInTest {
         assertThat(segunda.getEstadoReserva()).isEqualTo(EstadoReserva.RESERVADA);
     }
 
-    // ------------------------------------------------------------------
-    // 5. Regla de fechas
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Rechaza el check-in antes de la fecha de entrada")
@@ -321,9 +295,6 @@ class CheckInTest {
     @Test
     @DisplayName("Rechaza el check-in el mismo dia de la fecha de salida (ajuste F-09)")
     void checkIn_elDiaDeLaFechaDeSalida_esRechazado() {
-        // La fecha de salida es el límite EXCLUSIVO del período reservado. Admitir el check-in ese
-        // día permitía cobrar las noches de una estancia en la que el huésped no pernocta.
-        // Se inserta directamente porque la API no admite una reserva cuya salida sea hoy.
         Reserva reserva = insertarReservaDirecta("RES-SALIDA-HOY", HABITACION, PASADO, HOY);
 
         assertThatThrownBy(() -> estadiaService.realizarCheckIn(reserva.getIdReserva()))
@@ -370,9 +341,6 @@ class CheckInTest {
         assertThat(reserva.getFechaFin()).isEqualTo(finAntes);
     }
 
-    // ------------------------------------------------------------------
-    // 6. Estado de la habitacion
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Rechaza el check-in con la habitacion EN_LIMPIEZA")
@@ -430,23 +398,17 @@ class CheckInTest {
         assertThat(habitacionService.obtenerOFallar(HABITACION).getEstadoHabitacion())
                 .isEqualTo(EstadoHabitacion.OCUPADA);
 
-        // La habitacion ocupada debe seguir ofreciendose en una ventana futura que no se solapa:
-        // el estado OCUPADA no sustituye la validacion de solapamiento por fechas.
         assertThat(habitacionService.listarDisponibles(MAÑANA.plusDays(5), MAÑANA.plusDays(7), null))
                 .as("la habitacion OCUPADA sigue ofreciendose para fechas sin solape")
                 .extracting(Habitacion::getNumeroHabitacion)
                 .contains(HABITACION);
 
-        // Y una reserva futura en esa misma habitacion debe seguir siendo posible.
         Reserva futura = crearReserva(HABITACION, MAÑANA.plusDays(5), MAÑANA.plusDays(7));
 
         assertThat(futura.getHabitacion().getNumeroHabitacion()).isEqualTo(HABITACION);
         assertThat(futura.getEstadoReserva()).isEqualTo(EstadoReserva.RESERVADA);
     }
 
-    // ------------------------------------------------------------------
-    // 7. Ausencia de cambios parciales
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Un rechazo no deja estadias parciales ni habitaciones marcadas")
@@ -478,9 +440,6 @@ class CheckInTest {
                 .isEqualTo(EstadoHabitacion.DISPONIBLE);
     }
 
-    // ------------------------------------------------------------------
-    // 8. Concurrencia
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Check-ins simultaneos sobre la misma reserva dejan una sola estadia")
@@ -498,8 +457,6 @@ class CheckInTest {
     @Test
     @DisplayName("Check-ins simultaneos sobre la misma habitacion dejan una sola estadia")
     void checkIn_simultaneo_mismaHabitacion_unaEstadia() throws Exception {
-        // Dos reservas en la misma habitacion y en las mismas fechas: el estado incoherente solo
-        // puede existir si se inserta directamente, y es justo lo que la regla debe impedir.
         String[] ids = {
                 insertarReservaDirecta("RES-A", HABITACION, HOY, MAÑANA).getIdReserva(),
                 insertarReservaDirecta("RES-B", HABITACION, HOY, MAÑANA).getIdReserva()
@@ -523,7 +480,6 @@ class CheckInTest {
             ids[i] = insertarReservaDirecta("RES-LIBRE-" + i, habitaciones[i], HOY, MAÑANA).getIdReserva();
         }
 
-        // Una sola peticion por reserva, todas en paralelo: las tres son validas e independientes.
         ResultadoCarrera resultado = ejecutarEnParalelo(ids.length,
                 i -> estadiaService.realizarCheckIn(ids[i]));
 
@@ -533,9 +489,6 @@ class CheckInTest {
         assertThat(dataStore.getEstadias()).hasSize(ids.length);
     }
 
-    // ------------------------------------------------------------------
-    // 9. Contrato HTTP
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("POST /api/estadias/checkin/{id} devuelve 200 con la estadia creada")
@@ -600,9 +553,6 @@ class CheckInTest {
         }
     }
 
-    // ------------------------------------------------------------------
-    // 10. Regresion: el comportamiento previo no se altera
-    // ------------------------------------------------------------------
 
     @Test
     @DisplayName("Tras el check-in siguen funcionando listar reservas, estadias y disponibilidad")
@@ -616,17 +566,12 @@ class CheckInTest {
         assertThat(estadiaService.listarTodas()).hasSize(1);
         assertThat(posterior.getEstadoReserva()).isEqualTo(EstadoReserva.RESERVADA);
 
-        // La 102 esta reservada en esa ventana y no debe ofrecerse; la 101 quedo OCUPADA por el
-        // check-in de HOY, pero sigue libre en la ventana futura y debe seguir apareciendo.
         assertThat(habitacionService.listarDisponibles(MAÑANA.plusDays(5), MAÑANA.plusDays(7), null))
                 .extracting(Habitacion::getNumeroHabitacion)
                 .contains(HABITACION)
                 .doesNotContain(102);
     }
 
-    // ------------------------------------------------------------------
-    // Utilidades
-    // ------------------------------------------------------------------
 
     /** Resultado de una carrera de peticiones paralelas. */
     private static class ResultadoCarrera {
