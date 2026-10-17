@@ -655,7 +655,6 @@ class ConcurrenciaCoordenadaTest {
             assertThat(habitacionDe(HABITACION)).isEqualTo(EstadoHabitacion.OCUPADA);
             assertThat(habitacionDe(OTRA_HABITACION)).isEqualTo(EstadoHabitacion.DISPONIBLE);
 
-            // Y el flujo sigue siendo completable: el huesped puede salir.
             pagarTotal(estadia);
             assertThatCode(() -> estadiaService.realizarCheckOut(estadia.getIdEstadia()))
                     .doesNotThrowAnyException();
