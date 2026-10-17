@@ -1,5 +1,6 @@
 package co.edu.uniquindio.sistemahotel.backend.repository;
 
+import co.edu.uniquindio.sistemahotel.backend.data.DataStore;
 import co.edu.uniquindio.sistemahotel.backend.model.Pago;
 import org.springframework.stereotype.Repository;
 
