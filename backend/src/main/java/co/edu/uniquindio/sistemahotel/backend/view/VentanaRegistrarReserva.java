@@ -2,7 +2,6 @@ package co.edu.uniquindio.sistemahotel.backend.view;
 
 import co.edu.uniquindio.sistemahotel.backend.controller.ReservaController;
 import co.edu.uniquindio.sistemahotel.backend.dto.ReservaRequestDTO;
-import co.edu.uniquindio.sistemahotel.backend.dto.ReservaResponseDTO;
 
 import javax.swing.*;
 import java.awt.*;

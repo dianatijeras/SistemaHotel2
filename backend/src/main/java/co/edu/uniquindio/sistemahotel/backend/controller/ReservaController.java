@@ -1,7 +1,6 @@
 package co.edu.uniquindio.sistemahotel.backend.controller;
 
 import co.edu.uniquindio.sistemahotel.backend.dto.ReservaRequestDTO;
-import co.edu.uniquindio.sistemahotel.backend.dto.ReservaResponseDTO;
 import co.edu.uniquindio.sistemahotel.backend.model.Reserva;
 import co.edu.uniquindio.sistemahotel.backend.service.ReservaService;
 import org.springframework.stereotype.Controller;
