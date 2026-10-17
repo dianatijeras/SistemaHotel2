@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>co.edu.uniquindio.SistemaHotel</groupId>
-    <artifactId>SistemaHotel</artifactId>
+    <artifactId>SistemaHotelManager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>SistemaHotel</name>
     <description>SistemaHotel</description>
