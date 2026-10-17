@@ -23,7 +23,7 @@ public class PagoService {
     private static final int CONCEPTO_MAXIMO = 200;
 
     private final PagoRepository pagoRepository;
-    private final co.edu.uniquindio.sistemahotelmanager.service.EstadiaService estadiaService;
+    private final EstadiaService estadiaService;
     private final SaldoService saldoService;
 
     /**
@@ -33,7 +33,7 @@ public class PagoService {
      * @param saldoService servicio de saldo, única fuente de la fórmula de dinero
      */
     public PagoService(PagoRepository pagoRepository,
-                       co.edu.uniquindio.sistemahotelmanager.service.EstadiaService estadiaService,
+                       EstadiaService estadiaService,
                        SaldoService saldoService) {
         this.pagoRepository = pagoRepository;
         this.estadiaService = estadiaService;

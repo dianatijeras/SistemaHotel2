@@ -1,4 +1,4 @@
-package co.edu.uniquindio.sistemahotelmanager.service;
+package co.edu.uniquindio.sistemahotel.backend.service;
 
 import co.edu.uniquindio.sistemahotel.backend.service.ReservaService;
 import co.edu.uniquindio.sistemahotel.backend.dto.ConsumoCostoDTO;
