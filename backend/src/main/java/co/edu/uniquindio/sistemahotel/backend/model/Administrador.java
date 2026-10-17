@@ -4,7 +4,7 @@ import co.edu.uniquindio.sistemahotel.backend.enums.Rol;
 
 /**
  * El administrador del hotel: el único que da de alta personal y alterna su estado.
- * <p>Extiende de {@link UsuarioAcceso}, de modo que hereda el algoritmo de autenticación sin
+ * Extiende de {@link UsuarioAcceso}, de modo que hereda el algoritmo de autenticación sin
  * sobrescribirlo.
  */
 public class Administrador extends UsuarioAcceso {

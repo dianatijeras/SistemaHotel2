@@ -100,14 +100,14 @@ public abstract class Usuario {
     }
 
     /**
-     * <p>Declarado aquí para que una referencia {@code Usuario} permita leerlo. El campo y su
+     * Declarado aquí para que una referencia {@code Usuario} permita leerlo. El campo y su
      * implementación siguen en cada subclase, que es donde se inicializan.
      * @return
      */
     public abstract String getNombre();
 
     /**
-     * <p>Declarado aquí para que una referencia {@code Usuario} permita escribirlo. El campo y su
+     * Declarado aquí para que una referencia {@code Usuario} permita escribirlo. El campo y su
      * implementación siguen en cada subclase, que es donde se inicializan.
      * @param nombre
      */
@@ -120,7 +120,7 @@ public abstract class Usuario {
     public abstract String getApellido();
 
     /**
-     * <p>Declarado aquí para que una referencia {@code Usuario} permita escribirlo. El campo y su
+     * Declarado aquí para que una referencia {@code Usuario} permita escribirlo. El campo y su
      * implementación siguen en cada subclase, que es donde se inicializan.
      * @param apellido
      */
@@ -128,7 +128,7 @@ public abstract class Usuario {
 
     /**
      * Nombre y apellidos unidos por un espacio.
-     * <p>Declarado aquí para que una referencia {@code Usuario} permita leerlo. El campo y su* @return nombre completo
+     * Declarado aquí para que una referencia {@code Usuario} permita leerlo. El campo y su* @return nombre completo
      */
     public abstract String getNombreCompleto();
 }
