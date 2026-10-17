@@ -1,5 +1,6 @@
 package co.edu.uniquindio.sistemahotel.backend.service;
 
+import co.edu.uniquindio.sistemahotel.backend.model.estado.EstadoHabitacionBase;
 import co.edu.uniquindio.sistemahotel.backend.service.ReservaService;
 import co.edu.uniquindio.sistemahotel.backend.dto.ConsumoCostoDTO;
 import co.edu.uniquindio.sistemahotel.backend.dto.ConsumoRequestDTO;
