@@ -3,6 +3,7 @@ package co.edu.uniquindio.sistemahotel.backend.controller;
 import co.edu.uniquindio.sistemahotel.backend.dto.ConsumoRequestDTO;
 import co.edu.uniquindio.sistemahotel.backend.dto.EstadiaCostoDTO;
 import co.edu.uniquindio.sistemahotel.backend.model.Estadia;
+import co.edu.uniquindio.sistemahotel.backend.service.EstadiaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,13 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EstadiaController {
 
-    private final co.edu.uniquindio.sistemahotelmanager.service.EstadiaService estadiaService;
+    private final EstadiaService estadiaService;
 
     /**
      * Constructor para inyectar el EstadiaService.
      * @param estadiaService
      */
-    public EstadiaController(co.edu.uniquindio.sistemahotelmanager.service.EstadiaService estadiaService) {
+    public EstadiaController(EstadiaService estadiaService) {
         this.estadiaService = estadiaService;
     }
 
