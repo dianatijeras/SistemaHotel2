@@ -1,0 +1,11 @@
+
+> @figma/my-make-file@0.0.1 dev
+> vite --port 5173 --strictPort
+
+
+  [32m[1mVITE[22m v6.3.5[39m  [2mready in [0m[1m1365[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m12:04:37 a.m.[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/app/pages/reservas/ReservasNueva.tsx, /src/app/pages/reservas/ReservasList.tsx[22m
+[2m12:04:41 a.m.[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/app/pages/reservas/ReservasNueva.tsx, /src/app/pages/reservas/ReservasList.tsx[22m
