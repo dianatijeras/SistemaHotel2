@@ -1,6 +1,6 @@
 # SistemaHotelManager
 
-**Sistema de gestión hotelera** desarrollado como proyecto académico de **Ingeniería de Software 2** de la Universidad del Quindío.
+**Sistema de gestión hotelera** desarrollado como proyecto académico de **Ingeniería de Software II** de la Universidad del Quindío.
 
 ## ¿Qué hace?
 
@@ -22,7 +22,7 @@ El sistema también incluye gestión de habitaciones, personal y un panel de est
 ## Tecnologías y arquitectura
 
 - **Frontend:** React, TypeScript, React Router, Tailwind CSS y Vite.
-- **Backend:** Java 21, Spring Boot 3.2, Maven y Lombok.
+- **Backend:** Java 21, Spring Boot 3.2, Maven.
 - **Comunicación:** API REST mediante HTTP y JSON.
 - **Almacenamiento:** repositorios en memoria (`DataStore`); **no utiliza base de datos**.
 
