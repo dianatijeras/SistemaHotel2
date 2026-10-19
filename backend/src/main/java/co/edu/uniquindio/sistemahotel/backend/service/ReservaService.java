@@ -6,18 +6,34 @@ import co.edu.uniquindio.sistemahotel.backend.enums.EstadoReserva;
 import co.edu.uniquindio.sistemahotel.backend.model.Habitacion;
 import co.edu.uniquindio.sistemahotel.backend.model.Huesped;
 import co.edu.uniquindio.sistemahotel.backend.model.Reserva;
+import co.edu.uniquindio.sistemahotel.backend.notification.ReservaConfirmadaEvent;
 import co.edu.uniquindio.sistemahotel.backend.repository.HuespedRepository;
 import co.edu.uniquindio.sistemahotel.backend.repository.ReservaRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+/**
+ * Servicio de reservas que encapsula la lógica de negocio relacionada con la creación, modificación, confirmación y cancelación de reservas.
+ */
 @Service
-public class ReservaService {
+public class ReservaService implements ApplicationEventPublisherAware {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReservaService.class);
+
+    private ApplicationEventPublisher publicadorEventos;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher publicadorEventos) {
+        this.publicadorEventos = publicadorEventos;
+    }
 
     private final ReservaRepository reservaRepository;
     private final HabitacionService habitacionService;
@@ -202,12 +218,13 @@ public class ReservaService {
     }
 
     /**
-     * Método para confirmar una reserva.
+     * Método para confirmar una reserva (F-05).
      * @param idReserva
      * @return
      */
     public Reserva confirmarReserva(String idReserva) {
         Reserva reserva = obtenerOFallar(idReserva);
+        ReservaConfirmadaEvent evento;
         synchronized (reserva) {
             if (reserva.getEstadoReserva() != EstadoReserva.RESERVADA) {
                 throw new IllegalStateException(
@@ -215,8 +232,28 @@ public class ReservaService {
                                 + reserva.getEstadoReserva());
             }
             reserva.setEstadoReserva(EstadoReserva.CONFIRMADA);
-            return reserva;
+
+            var huesped = reserva.getHuesped();
+            evento = new ReservaConfirmadaEvent(
+                    huesped == null ? null : huesped.getCorreo(),
+                    huesped == null ? "Huésped" : huesped.getNombreCompleto(),
+                    reserva.getCodigoReserva(),
+                    reserva.getHabitacion().getNumeroHabitacion(),
+                    reserva.getFechaInicio(),
+                    reserva.getFechaFin()
+            );
         }
+
+        if (publicadorEventos != null) {
+            try {
+                publicadorEventos.publishEvent(evento);
+            } catch (RuntimeException ex) {
+                // Un error al encolar un mensaje no anula una confirmación exitosa.
+                LOG.warn("No se pudo solicitar el correo para la reserva {}: {}",
+                        reserva.getCodigoReserva(), ex.getMessage());
+            }
+        }
+        return reserva;
     }
 
     /**
