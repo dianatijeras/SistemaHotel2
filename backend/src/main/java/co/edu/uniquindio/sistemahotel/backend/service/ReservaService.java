@@ -86,16 +86,7 @@ public class ReservaService implements ApplicationEventPublisherAware {
         if (dto.getIdHuesped() == null || dto.getIdHuesped().trim().isEmpty()) {
             throw new IllegalArgumentException("Debe indicar el huésped de la reserva.");
         }
-        if (dto.getFechaInicio() == null || dto.getFechaFin() == null) {
-            throw new IllegalArgumentException("Las fechas de entrada y salida son obligatorias.");
-        }
-        if (!dto.getFechaInicio().isBefore(dto.getFechaFin())) {
-            throw new IllegalArgumentException(
-                    "La fecha de salida debe ser posterior a la fecha de entrada.");
-        }
-        if (dto.getFechaInicio().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de entrada no puede estar en el pasado.");
-        }
+        validarRangoDeFechasDeReserva(dto.getFechaInicio(), dto.getFechaFin());
     }
 
     /**
@@ -191,6 +182,10 @@ public class ReservaService implements ApplicationEventPublisherAware {
      * @param fin
      */
     private void validarRangoDeModificacion(LocalDate inicio, LocalDate fin) {
+        validarRangoDeFechasDeReserva(inicio, fin);
+    }
+
+    private void validarRangoDeFechasDeReserva(LocalDate inicio, LocalDate fin) {
         if (inicio == null || fin == null) {
             throw new IllegalArgumentException("Las fechas de entrada y salida son obligatorias.");
         }

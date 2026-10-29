@@ -32,9 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DashboardYsrpTest {
 
     private static final Path CTRL_DASHBOARD = Path.of(
-            "src/main/java/co/edu/uniquindio/sistemahotelmanager/Controller/DashboardController.java");
+            "src/main/java/co/edu/uniquindio/sistemahotel/backend/controller/DashboardController.java");
     private static final Path CTRL_USUARIOS = Path.of(
-            "src/main/java/co/edu/uniquindio/sistemahotelmanager/Controller/UsuarioController.java");
+            "src/main/java/co/edu/uniquindio/sistemahotel/backend/controller/UsuarioController.java");
 
     @Autowired
     private DashboardService dashboardService;
@@ -101,7 +101,7 @@ class DashboardYsrpTest {
         @DisplayName("Los servicios no dependen del almacen")
         void serviciosSinAlmacen() throws Exception {
             for (String nombre : List.of("DashboardService", "UsuarioService")) {
-                Path p = Path.of("src/main/java/co/edu/uniquindio/sistemahotelmanager/service/"
+                Path p = Path.of("src/main/java/co/edu/uniquindio/sistemahotel/backend/service/"
                         + nombre + ".java");
                 assertThat(Files.readString(p))
                         .as("%s se apoya en repositorios", nombre)
@@ -217,7 +217,7 @@ class DashboardYsrpTest {
         @DisplayName("AuthController sigue leyendo el almacen: la autenticacion no se mueve")
         void authControllerIntacto() throws Exception {
             Path auth = Path.of(
-                    "src/main/java/co/edu/uniquindio/sistemahotelmanager/Controller/AuthController.java");
+                    "src/main/java/co/edu/uniquindio/sistemahotel/backend/controller/AuthController.java");
 
             assertThat(Files.readString(auth))
                     .as("el login se deja como estaba")
@@ -229,7 +229,7 @@ class DashboardYsrpTest {
         @DisplayName("El patron State sigue decidiendo el estado de las habitaciones")
         void stateSigueParticipando() throws Exception {
             Path patron = Path.of(
-                    "src/main/java/co/edu/uniquindio/sistemahotelmanager/model/estado/"
+                    "src/main/java/co/edu/uniquindio/sistemahotel/backend/model/estado/"
                             + "EstadoHabitacionBase.java");
             assertThat(Files.readString(patron)).contains("boolean puedeIrA");
 
@@ -243,12 +243,12 @@ class DashboardYsrpTest {
         @DisplayName("El patron Factory Method sigue siendo quien construye el personal")
         void factoryMethodSigueParticipando() throws Exception {
             Path creator = Path.of(
-                    "src/main/java/co/edu/uniquindio/sistemahotelmanager/service/usuario/"
+                    "src/main/java/co/edu/uniquindio/sistemahotel/backend/service/usuario/"
                             + "UsuarioCreator.java");
             assertThat(Files.readString(creator)).contains("protected abstract Usuario crearEmpleado");
 
             String servicio = Files.readString(
-                    Path.of("src/main/java/co/edu/uniquindio/sistemahotelmanager/service/UsuarioService.java"));
+                    Path.of("src/main/java/co/edu/uniquindio/sistemahotel/backend/service/UsuarioService.java"));
             assertThat(servicio)
                     .as("el alta sigue pasando por los creadores")
                     .contains("recepcionistaCreator.crear(")
