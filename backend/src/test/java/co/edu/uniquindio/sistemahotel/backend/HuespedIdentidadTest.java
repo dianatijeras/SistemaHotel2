@@ -381,7 +381,7 @@ class HuespedIdentidadTest {
     @Test
     @DisplayName("El check-in sigue verificando el documento de identidad real")
     void checkIn_sigueVerificandoElDocumento() {
-        Reserva reserva = crearReserva("H-001", 101, HOY, HOY.plusDays(2));
+        Reserva reserva = crearReserva("H-001", 102, HOY, HOY.plusDays(2));
 
         var estadia = estadiaService.realizarCheckIn(reserva.getIdReserva());
 

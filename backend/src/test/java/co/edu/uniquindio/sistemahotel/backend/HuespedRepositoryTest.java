@@ -525,7 +525,7 @@ class HuespedRepositoryTest {
         @Test
         @DisplayName("El check-in sigue verificando el documento persistido en el repositorio")
         void checkIn_usaElDocumentoDelRepositorio() {
-            Reserva reserva = reservaService.crearReserva(solicitudReserva("H-002", 102));
+            Reserva reserva = reservaService.crearReserva(solicitudReserva("H-002", 103));
 
             Estadia estadia = estadiaService.realizarCheckIn(reserva.getIdReserva());
 
